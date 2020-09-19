@@ -57,8 +57,8 @@ for i_bin = 1:num_bin_in
     f_00 =(2*i_bin-1)*freq_per_bin/2;                             
     index = (i_bin-1)*sample_per_bin+2:i_bin*sample_per_bin+1;
     for i=1:Nel
-        F_sign(index,i) = FFsign(index)*exp( 1i*2*pi*f_00/c*d*(i-1)*sind(tetaSign) );
-        F_nois(index,i) = FFnois(index)*exp( 1i*2*pi*f_00/c*d*(i-1)*sind(tetaNois) );
+        F_sign(index,i) = FFsign(index)*exp( -1i*2*pi*f_00/c*d*(i-1)*sind(tetaSign) );
+        F_nois(index,i) = FFnois(index)*exp( -1i*2*pi*f_00/c*d*(i-1)*sind(tetaNois) );
     end
 end
 
@@ -114,7 +114,7 @@ end
 num_bin = 2*L;
 freqvec = [0:num_bin/2 -num_bin/2+1:-1]*fs/num_bin;         % частоты, которые соответствуют отсчетам частотной характеристики wfreq
 NN = L;
-freqbin = freqvec(1:length(freqvec)/2/NN:length(freqvec)/2-length(freqvec)/2/10);                                     % частоты, для которых строю ДН
+freqbin = freqvec(1 : length(freqvec)/2/NN : length(freqvec)/2-length(freqvec)/2/10);                                     % частоты, для которых строю ДН
 % freqbin = 250:250:4000;                                     % частоты, для которых строю ДН
 phi = -90:0.5:90-0.5;
 F_n = zeros(length(freqbin),length(phi));
@@ -131,8 +131,8 @@ for kk = 1:length(freqbin)
     w_rm = ones(Nel,1);
     for ii=1:length(phi)
         stv = steervec(( (1:Nel) -1)*d/lambda,phi(ii))';
-        b_n(ii) =  stv*conj(w_rm);                      
-        b_c(ii) =  stv*conj(W_opt(:,bandidx));                
+        b_n(ii) =  stv*(w_rm);                      
+        b_c(ii) =  stv*(W_opt(:,bandidx));                
     end
     F_n(kk,:) = abs(b_n).^2; 
     F_c(kk,:) = abs(b_c).^2;
